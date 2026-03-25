@@ -1,7 +1,7 @@
 import { Question } from '../types'
 
 export const attentionQuestions: Question[] = [
-  // ===== DIFFICULTY 1 — Easy (5 questions) =====
+  // ===== DIFFICULTY 1 — Easy =====
   {
     id: 'att-e1',
     type: 'attention',
@@ -57,8 +57,41 @@ export const attentionQuestions: Question[] = [
     explanation: 'O número 7 aparece na segunda e na quinta posição da sequência.',
     category: 'sustained',
   },
+  {
+    id: 'att-e6',
+    type: 'attention',
+    difficulty: 1,
+    prompt: 'Qual cor NÃO aparece na lista: Azul, Verde, Vermelho, Azul, Amarelo, Verde?',
+    options: ['Azul', 'Laranja', 'Verde', 'Amarelo'],
+    correctIndex: 1,
+    timeLimitMs: 15000,
+    explanation: 'Laranja não aparece na lista. Azul, Verde, Vermelho e Amarelo estão presentes.',
+    category: 'selective',
+  },
+  {
+    id: 'att-e7',
+    type: 'attention',
+    difficulty: 1,
+    prompt: 'Quantos números ímpares há na lista: 2, 5, 8, 3, 6, 1?',
+    options: ['1', '2', '3', '4'],
+    correctIndex: 2,
+    timeLimitMs: 15000,
+    explanation: 'Os números ímpares são 5, 3 e 1, totalizando 3.',
+    category: 'divided',
+  },
+  {
+    id: 'att-e8',
+    type: 'attention',
+    difficulty: 1,
+    prompt: 'Na sequência A-B-A-B-A-__, qual letra completa o padrão?',
+    options: ['A', 'B', 'C', 'D'],
+    correctIndex: 1,
+    timeLimitMs: 15000,
+    explanation: 'O padrão alterna A e B. Após A, vem B.',
+    category: 'sustained',
+  },
 
-  // ===== DIFFICULTY 2 — Medium (5 questions) =====
+  // ===== DIFFICULTY 2 — Medium =====
   {
     id: 'att-m1',
     type: 'attention',
@@ -114,8 +147,41 @@ export const attentionQuestions: Question[] = [
     explanation: 'As palavras com exatamente 4 letras são: Mesa, Bolo e Casa, totalizando 3.',
     category: 'divided',
   },
+  {
+    id: 'att-m6',
+    type: 'attention',
+    difficulty: 2,
+    prompt: 'Na sequência 1-A-2-B-3-C-4-__, qual elemento vem a seguir?',
+    options: ['5', 'D', 'E', '4'],
+    correctIndex: 1,
+    timeLimitMs: 10000,
+    explanation: 'O padrão alterna número-letra. Após 4, vem D.',
+    category: 'sustained',
+  },
+  {
+    id: 'att-m7',
+    type: 'attention',
+    difficulty: 2,
+    prompt: 'Quantas vezes o par "AB" aparece na sequência ABABCABAB?',
+    options: ['2', '3', '4', '5'],
+    correctIndex: 2,
+    timeLimitMs: 10000,
+    explanation: 'AB aparece nas posições 1-2, 3-4, 6-7 e 8-9, totalizando 4 vezes.',
+    category: 'selective',
+  },
+  {
+    id: 'att-m8',
+    type: 'attention',
+    difficulty: 2,
+    prompt: 'Qual é a diferença entre a soma dos números maiores que 5 e menores que 5 na lista: 3, 8, 1, 7, 4, 9?',
+    options: ['14', '16', '12', '18'],
+    correctIndex: 1,
+    timeLimitMs: 10000,
+    explanation: 'Maiores que 5: 8+7+9=24. Menores que 5: 3+1+4=8. Diferença: 24-8=16.',
+    category: 'divided',
+  },
 
-  // ===== DIFFICULTY 3 — Hard (5 questions) =====
+  // ===== DIFFICULTY 3 — Hard =====
   {
     id: 'att-h1',
     type: 'attention',
@@ -170,5 +236,38 @@ export const attentionQuestions: Question[] = [
     timeLimitMs: 8000,
     explanation: 'Os números aumentam sequencialmente (1,2,3,4,5,...). Após 5, vem 6.',
     category: 'sustained',
+  },
+  {
+    id: 'att-h6',
+    type: 'attention',
+    difficulty: 3,
+    prompt: 'Na frase "O rato roeu a roupa do rei de Roma", quantas palavras começam com a letra R?',
+    options: ['2', '3', '4', '5'],
+    correctIndex: 2,
+    timeLimitMs: 8000,
+    explanation: 'As palavras com R: rato, roeu, roupa, rei, Roma = 5. Mas "de" e "do" não. São 5 palavras com R.',
+    category: 'selective',
+  },
+  {
+    id: 'att-h7',
+    type: 'attention',
+    difficulty: 3,
+    prompt: 'Observe: ◆●▲ ◆●■ ◆●▲ ◆●■ ◆●__. Qual símbolo completa?',
+    options: ['◆', '●', '▲', '■'],
+    correctIndex: 2,
+    timeLimitMs: 8000,
+    explanation: 'O padrão alterna o terceiro símbolo entre ▲ e ■. Após ■, vem ▲.',
+    category: 'sustained',
+  },
+  {
+    id: 'att-h8',
+    type: 'attention',
+    difficulty: 3,
+    prompt: 'Quantas vezes o número 3 aparece como dígito nos números de 1 a 35?',
+    options: ['10', '12', '14', '8'],
+    correctIndex: 2,
+    timeLimitMs: 8000,
+    explanation: '3, 13, 23, 30, 31, 32, 33(2x), 34, 35 = 3 aparece como unidade (3,13,23,33) e dezena (30-35). Total: 14.',
+    category: 'divided',
   },
 ]

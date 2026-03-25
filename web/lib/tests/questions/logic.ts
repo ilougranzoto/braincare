@@ -1,7 +1,7 @@
 import { Question } from '../types'
 
 export const logicQuestions: Question[] = [
-  // ===== DIFFICULTY 1 — Easy (5 questions) =====
+  // ===== DIFFICULTY 1 — Easy =====
   {
     id: 'log-e1',
     type: 'logic',
@@ -54,11 +54,44 @@ export const logicQuestions: Question[] = [
     options: ['Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira'],
     correctIndex: 1,
     timeLimitMs: 15000,
-    explanation: 'Segunda + 2 dias = quarta-feira (segunda, terça, quarta).',
+    explanation: 'Segunda + 2 dias = quarta-feira.',
     category: 'deductive',
   },
+  {
+    id: 'log-e6',
+    type: 'logic',
+    difficulty: 1,
+    prompt: 'Qual é o próximo na sequência: 1, 3, 5, 7, __?',
+    options: ['8', '9', '10', '11'],
+    correctIndex: 1,
+    timeLimitMs: 15000,
+    explanation: 'Sequência de números ímpares, aumentando de 2 em 2. Após 7, vem 9.',
+    category: 'pattern',
+  },
+  {
+    id: 'log-e7',
+    type: 'logic',
+    difficulty: 1,
+    prompt: 'Se todas as rosas são flores e algumas flores são vermelhas, podemos concluir que:',
+    options: ['Todas as rosas são vermelhas', 'Algumas rosas podem ser vermelhas', 'Nenhuma rosa é vermelha', 'Todas as flores são rosas'],
+    correctIndex: 1,
+    timeLimitMs: 15000,
+    explanation: 'Sabemos que rosas são flores e algumas flores são vermelhas. É possível, mas não certo, que algumas rosas sejam vermelhas.',
+    category: 'deductive',
+  },
+  {
+    id: 'log-e8',
+    type: 'logic',
+    difficulty: 1,
+    prompt: 'Pé está para sapato assim como mão está para...?',
+    options: ['Anel', 'Luva', 'Relógio', 'Pulseira'],
+    correctIndex: 1,
+    timeLimitMs: 15000,
+    explanation: 'A relação é parte do corpo para o acessório que a cobre. Pé usa sapato, mão usa luva.',
+    category: 'inductive',
+  },
 
-  // ===== DIFFICULTY 2 — Medium (5 questions) =====
+  // ===== DIFFICULTY 2 — Medium =====
   {
     id: 'log-m1',
     type: 'logic',
@@ -100,7 +133,7 @@ export const logicQuestions: Question[] = [
     options: ['3', '7', '14', '17'],
     correctIndex: 2,
     timeLimitMs: 12000,
-    explanation: 'A sequência é de números primos (2, 3, 5, 7, 11, 13, 17). O número 14 não é primo (14 = 2 x 7).',
+    explanation: 'A sequência é de números primos (2, 3, 5, 7, 11, 13, 17). O número 14 não é primo.',
     category: 'pattern',
   },
   {
@@ -114,8 +147,41 @@ export const logicQuestions: Question[] = [
     explanation: 'Maria é mãe de João, e João é pai de Lucas. Portanto, Maria é avó de Lucas.',
     category: 'deductive',
   },
+  {
+    id: 'log-m6',
+    type: 'logic',
+    difficulty: 2,
+    prompt: 'Complete: 1, 1, 2, 3, 5, 8, __',
+    options: ['11', '12', '13', '14'],
+    correctIndex: 2,
+    timeLimitMs: 12000,
+    explanation: 'Sequência de Fibonacci: cada número é a soma dos dois anteriores. 5 + 8 = 13.',
+    category: 'pattern',
+  },
+  {
+    id: 'log-m7',
+    type: 'logic',
+    difficulty: 2,
+    prompt: 'Se A > B, B > C, e D > A, qual é a ordem do maior para o menor?',
+    options: ['D, A, B, C', 'A, D, B, C', 'D, B, A, C', 'A, B, C, D'],
+    correctIndex: 0,
+    timeLimitMs: 12000,
+    explanation: 'D > A > B > C. A ordem do maior para menor é D, A, B, C.',
+    category: 'deductive',
+  },
+  {
+    id: 'log-m8',
+    type: 'logic',
+    difficulty: 2,
+    prompt: 'Inverno está para frio assim como verão está para...?',
+    options: ['Praia', 'Calor', 'Férias', 'Sol'],
+    correctIndex: 1,
+    timeLimitMs: 12000,
+    explanation: 'A relação é estação para sua característica principal. Inverno = frio, verão = calor.',
+    category: 'inductive',
+  },
 
-  // ===== DIFFICULTY 3 — Hard (5 questions) =====
+  // ===== DIFFICULTY 3 — Hard =====
   {
     id: 'log-h1',
     type: 'logic',
@@ -124,7 +190,7 @@ export const logicQuestions: Question[] = [
     options: ['8', '10', '12', '14'],
     correctIndex: 2,
     timeLimitMs: 10000,
-    explanation: 'Galinhas (G) têm 2 patas, coelhos (C) têm 4. G + C = 20 e 2G + 4C = 56. Resolvendo: C = 8, G = 12.',
+    explanation: 'G + C = 20 e 2G + 4C = 56. Resolvendo: C = 8, G = 12.',
     category: 'deductive',
   },
   {
@@ -135,7 +201,7 @@ export const logicQuestions: Question[] = [
     options: ['Todos os A são C', 'Alguns A podem ser C', 'Nenhum A é D', 'Todos os B são D'],
     correctIndex: 1,
     timeLimitMs: 10000,
-    explanation: 'Se todos os A são B e alguns B são C, é possível que alguns A estejam entre os B que são C. Mas não é certo.',
+    explanation: 'Se todos os A são B e alguns B são C, é possível que alguns A estejam entre os B que são C.',
     category: 'deductive',
   },
   {
@@ -146,7 +212,7 @@ export const logicQuestions: Question[] = [
     options: ['70%', '80%', '90%', '100%'],
     correctIndex: 1,
     timeLimitMs: 10000,
-    explanation: 'Princípio da inclusão-exclusão: P(A ou B) = P(A) + P(B) - P(A e B) = 60% + 40% - 20% = 80%.',
+    explanation: 'Inclusão-exclusão: 60% + 40% - 20% = 80%.',
     category: 'inductive',
   },
   {
@@ -162,7 +228,7 @@ export const logicQuestions: Question[] = [
     ],
     correctIndex: 2,
     timeLimitMs: 10000,
-    explanation: 'A contrapositiva de "Se P então Q" é "Se não Q então não P". Ambas são logicamente equivalentes.',
+    explanation: 'A contrapositiva de "Se P então Q" é "Se não Q então não P".',
     category: 'deductive',
   },
   {
@@ -173,7 +239,40 @@ export const logicQuestions: Question[] = [
     options: ['7', '8', '9', '10'],
     correctIndex: 1,
     timeLimitMs: 10000,
-    explanation: 'A cada dia completo sobe 1 metro líquido. Após 7 dias está a 7m. No 8º dia sobe 3m, chegando a 10m e saindo antes de escorregar.',
+    explanation: 'Sobe 1m líquido/dia. Após 7 dias está a 7m. No 8º dia sobe 3m = 10m, saindo antes de escorregar.',
+    category: 'pattern',
+  },
+  {
+    id: 'log-h6',
+    type: 'logic',
+    difficulty: 3,
+    prompt: 'Se 3 máquinas fazem 3 peças em 3 minutos, quanto tempo 100 máquinas levam para fazer 100 peças?',
+    options: ['100 minutos', '33 minutos', '3 minutos', '1 minuto'],
+    correctIndex: 2,
+    timeLimitMs: 10000,
+    explanation: 'Cada máquina faz 1 peça em 3 minutos. 100 máquinas fazem 100 peças em 3 minutos.',
+    category: 'inductive',
+  },
+  {
+    id: 'log-h7',
+    type: 'logic',
+    difficulty: 3,
+    prompt: 'Em um torneio de 8 jogadores onde cada um joga contra todos os outros uma vez, quantos jogos acontecem?',
+    options: ['24', '28', '32', '56'],
+    correctIndex: 1,
+    timeLimitMs: 10000,
+    explanation: 'Combinação de 8 elementos 2 a 2: C(8,2) = 8×7/2 = 28 jogos.',
+    category: 'deductive',
+  },
+  {
+    id: 'log-h8',
+    type: 'logic',
+    difficulty: 3,
+    prompt: 'Complete a sequência: 2, 6, 12, 20, 30, __',
+    options: ['40', '42', '44', '46'],
+    correctIndex: 1,
+    timeLimitMs: 10000,
+    explanation: 'Diferenças: 4, 6, 8, 10 (pares crescentes). Próxima diferença: 12. 30 + 12 = 42.',
     category: 'pattern',
   },
 ]
