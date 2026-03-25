@@ -63,7 +63,16 @@ function ReportContent({ reportId }: { reportId: string }) {
     return (
       <div className="py-20 text-center">
         <p className="text-lg font-semibold text-red-600">{error}</p>
-        <Link href="/" className="mt-4 inline-block text-brand-600 hover:underline">Voltar ao início</Link>
+        <p className="mt-2 text-gray-500">Se você acabou de pagar, aguarde alguns instantes e recarregue a página.</p>
+        <div className="mt-4 flex justify-center gap-4">
+          <button
+            onClick={() => { setError(null); setLoading(true); fetchReport() }}
+            className="text-brand-600 hover:underline"
+          >
+            Tentar novamente
+          </button>
+          <Link href="/" className="text-gray-500 hover:underline">Voltar ao início</Link>
+        </div>
       </div>
     )
   }
