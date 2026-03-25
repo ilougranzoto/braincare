@@ -2,10 +2,11 @@
 
 import { motion } from 'framer-motion'
 import { Brain, Zap, TrendingUp, Star, Target, ArrowUp } from 'lucide-react'
-import type { DetailedProfile } from '@/lib/tests/types'
+import type { DetailedProfile, ADHDIndicator } from '@/lib/tests/types'
 import { AttentionProfile } from './attention-profile'
 import { LogicProfile } from './logic-profile'
 import { Recommendations } from './recommendations'
+import { PremiumIndicators } from './premium-indicators'
 
 interface FullReportProps {
   score: number
@@ -15,9 +16,11 @@ interface FullReportProps {
   logicScore: number | null
   profileSummary: string
   detailedProfile: DetailedProfile
+  adhdIndicator?: ADHDIndicator
+  cognitiveEstimate?: number
 }
 
-export function FullReport({ score, maxScore, percentile, attentionScore, logicScore, profileSummary, detailedProfile }: FullReportProps) {
+export function FullReport({ score, maxScore, percentile, attentionScore, logicScore, profileSummary, detailedProfile, adhdIndicator, cognitiveEstimate }: FullReportProps) {
   return (
     <div className="space-y-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
@@ -47,6 +50,10 @@ export function FullReport({ score, maxScore, percentile, attentionScore, logicS
           )}
         </div>
       </motion.div>
+
+      {adhdIndicator && cognitiveEstimate && (
+        <PremiumIndicators adhdIndicator={adhdIndicator} cognitiveEstimate={cognitiveEstimate} />
+      )}
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-2xl border border-gray-200 bg-white p-6">
         <h2 className="flex items-center gap-2 text-xl font-bold text-gray-900"><Star className="h-5 w-5 text-accent-500" /> Estilo Cognitivo</h2>

@@ -66,6 +66,8 @@ export async function GET(
         logicScore: result.logicScore,
         profileSummary: result.profileSummary,
         detailedProfile: result.detailedProfile,
+        adhdIndicator: result.adhdIndicator,
+        cognitiveEstimate: result.cognitiveEstimate,
       },
     })
   } catch (error) {

@@ -41,7 +41,16 @@ export interface ResultData {
   logicScore: number | null
   profileSummary: string
   detailedProfile: DetailedProfile
+  adhdIndicator: ADHDIndicator
+  cognitiveEstimate: number
 }
+
+export interface ADHDIndicator {
+  score: number
+  level: 'baixo' | 'moderado' | 'elevado' | 'muito_elevado'
+  label: string
+}
+
 
 export interface DetailedProfile {
   attention: {

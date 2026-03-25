@@ -65,6 +65,8 @@ export async function POST(req: NextRequest) {
         logicScore: resultData.logicScore,
         profileSummary: resultData.profileSummary,
         detailedProfile: resultData.detailedProfile,
+        adhdIndicator: resultData.adhdIndicator,
+        cognitiveEstimate: resultData.cognitiveEstimate,
       })
       .returning()
 

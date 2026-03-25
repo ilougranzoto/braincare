@@ -5,7 +5,7 @@ import { useSession, SessionProvider } from 'next-auth/react'
 import { Brain } from 'lucide-react'
 import Link from 'next/link'
 import { FullReport } from '@/components/report/full-report'
-import type { DetailedProfile } from '@/lib/tests/types'
+import type { DetailedProfile, ADHDIndicator } from '@/lib/tests/types'
 
 interface ReportData {
   report: { id: string; unlockedAt: string }
@@ -17,6 +17,8 @@ interface ReportData {
     logicScore: number | null
     profileSummary: string
     detailedProfile: DetailedProfile
+    adhdIndicator?: ADHDIndicator
+    cognitiveEstimate?: number
   }
 }
 
@@ -88,6 +90,8 @@ function ReportContent({ reportId }: { reportId: string }) {
       logicScore={report.result.logicScore}
       profileSummary={report.result.profileSummary}
       detailedProfile={report.result.detailedProfile}
+      adhdIndicator={report.result.adhdIndicator}
+      cognitiveEstimate={report.result.cognitiveEstimate}
     />
   )
 }

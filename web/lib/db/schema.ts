@@ -32,6 +32,8 @@ export const results = pgTable('results', {
   logicScore: integer('logic_score'),
   profileSummary: text('profile_summary'),
   detailedProfile: jsonb('detailed_profile'),
+  adhdIndicator: jsonb('adhd_indicator'),
+  cognitiveEstimate: integer('cognitive_estimate'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 

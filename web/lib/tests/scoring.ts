@@ -1,4 +1,4 @@
-import { Answer, ResultData, DetailedProfile, Difficulty } from './types'
+import { Answer, ResultData, DetailedProfile, Difficulty, ADHDIndicator } from './types'
 
 // More granular percentile curve (0-20 raw score mapped)
 const PERCENTILE_CURVE: Record<number, number> = {
@@ -30,10 +30,10 @@ function estimatePercentile(weightedScore: number, maxWeightedScore: number, raw
   const weightBonus = Math.round((weightRatio - 0.5) * 10) // -5 to +5
 
   // Speed bonus: faster responses indicate stronger cognition
-  const speedBonus = avgResponseTime < 4000 ? 3
-    : avgResponseTime < 6000 ? 2
-    : avgResponseTime < 8000 ? 1
-    : avgResponseTime > 12000 ? -2
+  const speedBonus = avgResponseTime < 8000 ? 3
+    : avgResponseTime < 12000 ? 2
+    : avgResponseTime < 16000 ? 1
+    : avgResponseTime > 22000 ? -2
     : 0
 
   return Math.min(99, Math.max(1, basePercentile + weightBonus + speedBonus))
@@ -83,16 +83,16 @@ function scoreCategoryAttention(answers: Answer[], category: string): CategorySc
   // Time adjustments per category
   if (category === 'sustained') {
     // Sustained attention: consistency matters more
-    if (stats.avgTime < 6000) score = Math.min(100, score + 8)
-    else if (stats.avgTime > 12000) score = Math.max(0, score - 10)
+    if (stats.avgTime < 12000) score = Math.min(100, score + 8)
+    else if (stats.avgTime > 20000) score = Math.max(0, score - 10)
   } else if (category === 'selective') {
     // Selective: accuracy is key, speed less important
     if (stats.accuracy >= 0.8) score = Math.min(100, score + 5)
   } else if (category === 'divided') {
     // Divided: speed matters a lot
-    if (stats.avgTime < 5000) score = Math.min(100, score + 12)
-    else if (stats.avgTime < 8000) score = Math.min(100, score + 5)
-    else if (stats.avgTime > 10000) score = Math.max(0, score - 8)
+    if (stats.avgTime < 10000) score = Math.min(100, score + 12)
+    else if (stats.avgTime < 15000) score = Math.min(100, score + 5)
+    else if (stats.avgTime > 20000) score = Math.max(0, score - 8)
   }
 
   const level = score >= 85 ? 'excelente'
@@ -226,11 +226,11 @@ function scoreCategoryLogic(answers: Answer[], category: string): CategoryScore 
     else if (stats.accuracy < 0.5) score = Math.max(0, score - 5)
   } else if (category === 'inductive') {
     // Inductive: balance of speed and accuracy
-    if (stats.accuracy >= 0.7 && stats.avgTime < 8000) score = Math.min(100, score + 8)
+    if (stats.accuracy >= 0.7 && stats.avgTime < 16000) score = Math.min(100, score + 8)
   } else if (category === 'pattern') {
     // Pattern recognition: speed is a strong signal
-    if (stats.avgTime < 5000) score = Math.min(100, score + 10)
-    else if (stats.avgTime < 8000) score = Math.min(100, score + 5)
+    if (stats.avgTime < 10000) score = Math.min(100, score + 10)
+    else if (stats.avgTime < 16000) score = Math.min(100, score + 5)
   }
 
   const level = score >= 85 ? 'excelente'
@@ -358,8 +358,8 @@ function determineCognitiveStyle(
   attentionAccuracy: number,
   logicAccuracy: number
 ): string {
-  const fast = avgTime < 6000
-  const slow = avgTime > 10000
+  const fast = avgTime < 12000
+  const slow = avgTime > 20000
   const highAccuracy = overallAccuracy >= 0.8
   const lowAccuracy = overallAccuracy < 0.5
 
@@ -394,6 +394,87 @@ function determineCognitiveStyle(
     return 'Impulsivo — você responde rapidamente mas sacrifica precisão. Dedicar mais tempo à análise antes de responder pode trazer ganhos significativos.'
   }
   return 'Em Desenvolvimento — seus resultados indicam espaço significativo para crescimento em ambas as áreas. A boa notícia é que habilidades cognitivas podem ser treinadas com prática consistente.'
+}
+
+// ===== ADHD INDICATOR =====
+
+function calculateADHDIndicator(answers: Answer[]): ADHDIndicator {
+  const attentionAnswers = answers.filter(a => a.questionId.startsWith('att'))
+  const times = answers.map(a => a.responseTimeMs)
+
+  // Factor 1: Response time variance (inconsistency is a key ADHD signal)
+  const avgTime = times.reduce((s, t) => s + t, 0) / times.length
+  const variance = times.reduce((s, t) => s + Math.pow(t - avgTime, 2), 0) / times.length
+  const cv = Math.sqrt(variance) / avgTime // coefficient of variation
+  const varianceScore = Math.min(30, Math.round(cv * 60)) // 0-30 points
+
+  // Factor 2: Attention accuracy (low accuracy = more ADHD signals)
+  const attCorrect = attentionAnswers.filter(a => a.correct).length
+  const attAccuracy = attentionAnswers.length > 0 ? attCorrect / attentionAnswers.length : 0.5
+  const attentionScore = Math.round((1 - attAccuracy) * 30) // 0-30 points
+
+  // Factor 3: Performance decline over time (fatigue/loss of focus)
+  const firstHalf = answers.slice(0, Math.floor(answers.length / 2))
+  const secondHalf = answers.slice(Math.floor(answers.length / 2))
+  const firstAcc = firstHalf.filter(a => a.correct).length / (firstHalf.length || 1)
+  const secondAcc = secondHalf.filter(a => a.correct).length / (secondHalf.length || 1)
+  const declineScore = Math.max(0, Math.round((firstAcc - secondAcc) * 25)) // 0-25 points
+
+  // Factor 4: Timeouts and very fast (impulsive) answers
+  const timeouts = answers.filter(a => a.answer === -1).length
+  const impulsive = answers.filter(a => a.responseTimeMs < 1500 && !a.correct).length
+  const impulseScore = Math.min(15, (timeouts + impulsive) * 3) // 0-15 points
+
+  const total = Math.min(100, varianceScore + attentionScore + declineScore + impulseScore)
+
+  const level = total <= 30 ? 'baixo'
+    : total <= 60 ? 'moderado'
+    : total <= 80 ? 'elevado'
+    : 'muito_elevado'
+
+  const labels: Record<string, string> = {
+    baixo: 'Poucos sinais de desatenção',
+    moderado: 'Alguns sinais de desatenção',
+    elevado: 'Sinais elevados de desatenção',
+    muito_elevado: 'Sinais muito elevados de desatenção',
+  }
+
+  return { score: total, level, label: labels[level] }
+}
+
+// ===== COGNITIVE ESTIMATE (QI-like) =====
+
+function calculateCognitiveEstimate(
+  weightedScore: number,
+  maxWeightedScore: number,
+  rawScore: number,
+  totalQuestions: number,
+  avgResponseTime: number,
+  answers: Answer[]
+): number {
+  // Base: map raw accuracy to IQ-like scale (center at 100)
+  const accuracy = totalQuestions > 0 ? rawScore / totalQuestions : 0
+  const baseIQ = 70 + Math.round(accuracy * 60) // 70-130 base range
+
+  // Bonus for hard questions answered correctly
+  const hardCorrect = answers.filter(a => a.correct && a.difficulty === 3).length
+  const hardBonus = hardCorrect * 2 // up to ~16 points
+
+  // Speed bonus
+  const speedBonus = avgResponseTime < 8000 ? 5
+    : avgResponseTime < 12000 ? 3
+    : avgResponseTime > 22000 ? -3
+    : 0
+
+  // Weighted score ratio bonus
+  const weightRatio = maxWeightedScore > 0 ? weightedScore / maxWeightedScore : 0
+  const weightBonus = Math.round((weightRatio - 0.5) * 8) // -4 to +4
+
+  const estimatedIQ = baseIQ + hardBonus + speedBonus + weightBonus
+
+  // Clamp to realistic range and add small random variation (+/- 2)
+  const randomOffset = Math.floor(Math.random() * 5) - 2
+  return Math.min(145, Math.max(70, estimatedIQ + randomOffset))
 }
 
 // ===== MAIN FUNCTION =====
@@ -506,7 +587,7 @@ export function calculateResults(answers: Answer[], testType: 'attention' | 'log
 
   // General recommendations based on overall performance
   const generalRecs: string[] = []
-  if (avgTime > 10000) {
+  if (avgTime > 20000) {
     generalRecs.push('Treinar velocidade de processamento com exercícios cronometrados pode trazer ganhos significativos')
   }
   if (overallAccuracy < 0.5) {
@@ -534,6 +615,9 @@ export function calculateResults(answers: Answer[], testType: 'attention' | 'log
     },
   }
 
+  const adhdIndicator = calculateADHDIndicator(answers)
+  const cognitiveEstimate = calculateCognitiveEstimate(weightedScore, maxScore, rawScore, answers.length, avgTime, answers)
+
   const profileSummary = `Você acertou ${rawScore} de ${answers.length} questões, ficando acima de ${percentile}% das pessoas. ${cognitiveStyle.split(' — ')[0]}: ${cognitiveStyle.split(' — ')[1] || cognitiveStyle}`
 
   return {
@@ -544,5 +628,7 @@ export function calculateResults(answers: Answer[], testType: 'attention' | 'log
     logicScore,
     profileSummary,
     detailedProfile,
+    adhdIndicator,
+    cognitiveEstimate,
   }
 }
