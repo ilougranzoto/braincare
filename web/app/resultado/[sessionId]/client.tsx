@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { SessionProvider } from 'next-auth/react'
 import { PartialResult } from '@/components/results/partial-result'
+import { ShareButtons } from '@/components/results/share-buttons'
 import { LockedSection } from '@/components/results/locked-section'
 import { PaywallCta } from '@/components/results/paywall-cta'
 import { trackEvent } from '@/lib/analytics'
@@ -71,6 +72,9 @@ export function ResultPageClient({ sessionId }: { sessionId: string }) {
           logicScore={result.logicScore}
           profileSummary={result.profileSummary}
         />
+
+        {/* Share */}
+        <ShareButtons percentile={result.percentile} sessionId={sessionId} />
 
         {/* Locked sections preview */}
         <div className="space-y-4">

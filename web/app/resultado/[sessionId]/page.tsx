@@ -1,6 +1,47 @@
 import { Brain } from 'lucide-react'
 import Link from 'next/link'
 import { ResultPageClient } from './client'
+import type { Metadata } from 'next'
+import { eq } from 'drizzle-orm'
+import { db } from '@/lib/db'
+import { results } from '@/lib/db/schema'
+
+export async function generateMetadata({ params }: { params: Promise<{ sessionId: string }> }): Promise<Metadata> {
+  const { sessionId } = await params
+
+  try {
+    const [result] = await db
+      .select({ percentile: results.percentile })
+      .from(results)
+      .where(eq(results.sessionId, sessionId))
+      .limit(1)
+
+    if (result) {
+      return {
+        title: `Meu Perfil Cognitivo | BrainCare`,
+        description: `Fiz um teste cognitivo e estou acima de ${result.percentile}% das pessoas! Faça o seu também.`,
+        openGraph: {
+          title: `Estou acima de ${result.percentile}% das pessoas!`,
+          description: 'Descubra seu perfil cognitivo em 5 minutos. Teste gratuito de atenção e raciocínio lógico.',
+          siteName: 'BrainCare',
+          type: 'website',
+        },
+        twitter: {
+          card: 'summary_large_image',
+          title: `Estou acima de ${result.percentile}% das pessoas!`,
+          description: 'Descubra seu perfil cognitivo em 5 minutos.',
+        },
+      }
+    }
+  } catch {
+    // fallback
+  }
+
+  return {
+    title: 'Resultado | BrainCare',
+    description: 'Descubra seu perfil cognitivo com BrainCare.',
+  }
+}
 
 export default async function ResultPage({ params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = await params

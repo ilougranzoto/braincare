@@ -7,6 +7,9 @@ type EventName =
   | 'payment_started'
   | 'payment_completed'
   | 'report_viewed'
+  | 'share_whatsapp'
+  | 'share_twitter'
+  | 'share_copy'
 
 export function trackEvent(event: EventName, properties?: Record<string, unknown>) {
   if (typeof window === 'undefined') return
