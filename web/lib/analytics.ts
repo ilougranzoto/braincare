@@ -1,3 +1,5 @@
+import posthog from 'posthog-js'
+
 type EventName =
   | 'test_started'
   | 'test_completed'
@@ -11,9 +13,34 @@ type EventName =
   | 'share_twitter'
   | 'share_copy'
 
+let initialized = false
+
+function ensurePostHog() {
+  if (typeof window === 'undefined' || initialized) return
+  initialized = true
+
+  const key = process.env.NEXT_PUBLIC_POSTHOG_KEY
+  const host = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
+
+  if (key) {
+    posthog.init(key, {
+      api_host: host,
+      capture_pageview: true,
+      capture_pageleave: true,
+      persistence: 'localStorage+cookie',
+    })
+  }
+}
+
 export function trackEvent(event: EventName, properties?: Record<string, unknown>) {
   if (typeof window === 'undefined') return
 
-  // Placeholder for analytics integration (PostHog, Mixpanel, GA4)
-  console.log(`[analytics] ${event}`, properties)
+  ensurePostHog()
+
+  if (process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+    posthog.capture(event, properties)
+  } else {
+    // Fallback: log to console when PostHog is not configured
+    console.log(`[analytics] ${event}`, properties)
+  }
 }

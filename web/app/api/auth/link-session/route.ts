@@ -4,8 +4,12 @@ import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { users } from '@/lib/db/schema'
 import { linkAnonymousSession } from '@/lib/auth/link-session'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: NextRequest) {
+  const rateLimitResponse = rateLimit(req, { limit: 5 })
+  if (rateLimitResponse) return rateLimitResponse
+
   try {
     const session = await auth()
     if (!session?.user?.email) {

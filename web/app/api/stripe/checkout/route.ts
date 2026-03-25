@@ -6,8 +6,12 @@ import { results, reports, users } from '@/lib/db/schema'
 import { stripe } from '@/lib/stripe/client'
 import { STRIPE_CONFIG } from '@/lib/stripe/config'
 import { createCheckoutSchema } from '@/lib/validations/test'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: NextRequest) {
+  const rateLimitResponse = rateLimit(req, { limit: 3 })
+  if (rateLimitResponse) return rateLimitResponse
+
   try {
     const session = await auth()
     if (!session?.user?.email) {

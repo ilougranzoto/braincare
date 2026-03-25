@@ -4,8 +4,12 @@ import { db } from '@/lib/db'
 import { testSessions } from '@/lib/db/schema'
 import { createTestSession, getNextQuestion, TOTAL_QUESTIONS } from '@/lib/tests/engine'
 import { createSessionSchema } from '@/lib/validations/test'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: NextRequest) {
+  const rateLimitResponse = rateLimit(req, { limit: 5 })
+  if (rateLimitResponse) return rateLimitResponse
+
   try {
     const body = await req.json()
     const parsed = createSessionSchema.safeParse(body)

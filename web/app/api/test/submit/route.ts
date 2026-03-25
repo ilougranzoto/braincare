@@ -7,10 +7,14 @@ import { submitAnswerSchema } from '@/lib/validations/test'
 import { attentionQuestions } from '@/lib/tests/questions/attention'
 import { logicQuestions } from '@/lib/tests/questions/logic'
 import type { TestState, Answer, Difficulty } from '@/lib/tests/types'
+import { rateLimit } from '@/lib/rate-limit'
 
 const allQuestions = [...attentionQuestions, ...logicQuestions]
 
 export async function POST(req: NextRequest) {
+  const rateLimitResponse = rateLimit(req, { limit: 30 })
+  if (rateLimitResponse) return rateLimitResponse
+
   try {
     const body = await req.json()
     const parsed = submitAnswerSchema.safeParse(body)

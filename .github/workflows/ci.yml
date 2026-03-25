@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+defaults:
+  run:
+    working-directory: web/
+
+env:
+  DATABASE_URL: postgresql://test:test@localhost:5432/test
+  AUTH_SECRET: test-secret-for-ci
+  NEXT_PUBLIC_BASE_URL: http://localhost:3000
+  STRIPE_SECRET_KEY: sk_test_fake
+  STRIPE_PUBLISHABLE_KEY: pk_test_fake
+  STRIPE_PRICE_ID: price_fake
+  STRIPE_WEBHOOK_SECRET: whsec_fake
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test --if-present
+
+      - name: Run build
+        run: npm run build

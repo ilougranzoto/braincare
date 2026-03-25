@@ -5,8 +5,12 @@ import { testSessions, results } from '@/lib/db/schema'
 import { calculateResults } from '@/lib/tests/scoring'
 import { completeTestSchema } from '@/lib/validations/test'
 import type { Answer } from '@/lib/tests/types'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: NextRequest) {
+  const rateLimitResponse = rateLimit(req, { limit: 5 })
+  if (rateLimitResponse) return rateLimitResponse
+
   try {
     const body = await req.json()
     const parsed = completeTestSchema.safeParse(body)
