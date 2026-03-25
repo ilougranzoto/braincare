@@ -78,6 +78,8 @@ export function ResultPageClient({ sessionId }: { sessionId: string }) {
 
         {/* Locked sections preview */}
         <div className="space-y-4">
+          <LockedSection title="Estimativa Cognitiva (QI)" />
+          <LockedSection title="Indicador de Atenção (TDAH)" />
           <LockedSection title="Perfil de Atenção Detalhado" />
           <LockedSection title="Perfil de Raciocínio Lógico" />
           <LockedSection title="Recomendações Personalizadas" />
