@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
     // Create Stripe checkout session
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: 'payment',
-      payment_method_types: ['card', 'pix'],
+      payment_method_types: ['card'],
       line_items: [
         {
           price_data: {
@@ -84,11 +84,6 @@ export async function POST(req: NextRequest) {
       metadata: {
         userId: user.id,
         resultId,
-      },
-      payment_method_options: {
-        pix: {
-          expires_after_seconds: 1800, // 30 minutos para pagar
-        },
       },
       success_url: STRIPE_CONFIG.successUrl,
       cancel_url: STRIPE_CONFIG.cancelUrl,
