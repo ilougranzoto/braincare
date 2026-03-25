@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useSession } from 'next-auth/react'
+import { useSearchParams } from 'next/navigation'
 import { Sparkles, Check, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AuthModal } from '@/components/auth/auth-modal'
@@ -14,10 +15,25 @@ interface PaywallCtaProps {
 }
 
 export function PaywallCta({ resultId, sessionId }: PaywallCtaProps) {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const anonymousId = useAnonymousId()
+  const searchParams = useSearchParams()
   const [showAuth, setShowAuth] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const hasTriggeredUnlock = useRef(false)
+
+  // Auto-trigger checkout after login redirect with ?unlock=true
+  useEffect(() => {
+    if (
+      searchParams.get('unlock') === 'true' &&
+      session &&
+      status === 'authenticated' &&
+      !hasTriggeredUnlock.current
+    ) {
+      hasTriggeredUnlock.current = true
+      handleUnlock()
+    }
+  }, [session, status, searchParams])
 
   const features = [
     'Análise detalhada de atenção (sustentada, seletiva, dividida)',
