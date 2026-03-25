@@ -1,0 +1,52 @@
+# DevFlow - Claude Code Project Configuration
+
+## Memory System Integration
+
+Always load these files for context:
+- .devflow/memory/active.json (current project state)
+- .devflow/memory/index.json (fast lookups)
+- .devflow/project.yaml (metadata)
+
+## Agent Orchestration Rules
+
+CRITICAL: Agents must follow hard stops and mandatory delegation.
+
+1. @strategist → Planning ONLY (never code)
+2. @architect → Software Design ONLY (never implementation, never infra at scale)
+3. @system-designer → System Design ONLY (never code, never software patterns)
+4. @builder → Code ONLY (never requirements)
+5. @guardian → QA ONLY (never features)
+6. @chronicler → Documentation ONLY (never code)
+
+## Workflow
+
+Linear flow: @strategist → @architect → @system-designer → @builder → @guardian → @chronicler
+
+Feedback loops allowed:
+- @guardian can send issues back to @builder
+- @architect can clarify with @strategist
+- @system-designer can clarify with @architect
+- @builder can escalate infra issues to @system-designer
+
+## Documentation Automation
+
+@chronicler must automatically:
+- Update CHANGELOG.md
+- Create snapshots
+- Generate stories if @strategist doesn't
+- Update active.json
+
+## Context Loading Strategy
+
+1. Always: active.json + index.json
+2. On-demand: Specific ADRs, stories, snapshots
+3. Archive: Only when explicitly requested
+
+## Slash Commands Available
+
+- /devflow-help - Complete guide
+- /devflow-status - Current project state
+- /new-feature - Guided feature creation
+- /create-adr - Guided ADR creation
+- /security-check - Quick security audit
+- /system-design - Guided system design creation
